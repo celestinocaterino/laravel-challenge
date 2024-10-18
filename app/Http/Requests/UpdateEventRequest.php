@@ -18,7 +18,7 @@ class UpdateEventRequest extends FormRequest
         return [
             'title' => 'required',
             'description' => 'required',
-            'schedulqed_at' => 'datetime',
+            'scheduled_at' => 'datetime',
             'location' => 'required',
             'max_attendees' => 'required|numeric',
         ];
