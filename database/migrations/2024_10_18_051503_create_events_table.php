@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable(false);
-            $table->string('description')->max(255);
+            $table->string('description')->max(1024);
             $table->dateTime('scheduled_at')->nullable(false);
             $table->string('location')->nullable(false);
             $table->integer('max_attendees')->nullable(false);
