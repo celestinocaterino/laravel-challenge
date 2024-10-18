@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\Attendee;
 
 class EventController extends Controller
 {
@@ -13,9 +14,17 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(15);
+        try {
+            $events = Event::paginate(15);
 
-        return response()->json($events);
+            return response()->json($events);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
     }
 
     /**
@@ -23,9 +32,17 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        $event = Event::create($request->all());
+        try{
+            $event = Event::create($request->all());
 
-        return response()->json($event, 201);
+            return response()->json($event);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
     }
 
     /**
@@ -33,7 +50,17 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return response()->json($event);
+        try{
+            $event->attendees;
+
+            return response()->json([$event]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
     }
 
     /**
@@ -41,12 +68,18 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-        $event->update($request->all());
+        try {
+            $event->update($request->all());
 
-        return response()->json([
-            'message' => 'Event successfully updated',
-            'data' => $event
-        ]);
+            return response()->json($event);
+        }  catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
+
     }
 
     /**
@@ -54,18 +87,51 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->delete();
+        try {
+            $event->delete();
 
-        return response()->json([
-            'message' => 'Event successfully deleted',
-        ]);
+            return response()->json([
+                'message' => 'Event successfully deleted',
+            ]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function reserve()
+    public function reserve(Event $event, Attendee $attendee)
     {
-        //TODO
+        try {
+            if($event->max_attendees <= $event->attendees()->count()){
+                return response()->json([
+                    'message' => 'Event fully reserved',
+                ]);
+            }
+
+
+            if($event->attendees()->where('attendee_id', $attendee->id)->exists()){
+                return response()->json([
+                    'message' => 'Event already reserved',
+                ]);
+            }
+
+            $event->attendees()->attach($attendee->id);
+
+            return response()->json([
+                'message' => 'Event successfully reserved',
+            ]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'message' => 'Something went wrong',
+                'status' => 'error'
+            ]);
+        }
     }
 }
