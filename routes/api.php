@@ -13,6 +13,6 @@ Route::prefix("/v1")->group(
         Route::apiResource('events', EventController::class)->middleware(ApiKeyMiddleware::class);
         Route::apiResource('attendees', AttendeeController::class)->middleware(ApiKeyMiddleware::class);
 
-        Route::post('/events/{eventID}/attendees/{attendeeId}', 'EventController@reserve')->middleware(ApiKeyMiddleware::class);
+        Route::post('/events/{event}/attendees/{attendee}', [EventController::class, 'reserve'])->middleware(ApiKeyMiddleware::class);
     }
 );

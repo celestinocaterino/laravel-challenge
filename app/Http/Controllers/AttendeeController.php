@@ -36,7 +36,7 @@ class AttendeeController extends Controller
         try {
             $attendee = Attendee::create($request->all());
 
-            return response()->json($attendee, 201);
+            return response()->json($attendee);
         } catch (\Throwable $th) {
 
             return response()->json([
