@@ -2,6 +2,10 @@
 
 The challenge requires developing a small web service using Laravel.
 
+## Install dependencies
+
+composer install
+
 ## Prepare your .env file
 
 Configure your .env file using .env.example as a reference.
