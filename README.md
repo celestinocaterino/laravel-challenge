@@ -1,4 +1,4 @@
-# Laravel - Up2You coding challenge :computer :
+# Laravel - Up2You coding challenge :computer:
 
 The challenge requires developing a small web service using Laravel.
 
